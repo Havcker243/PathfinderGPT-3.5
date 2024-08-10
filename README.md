@@ -1,70 +1,86 @@
-# Getting Started with Create React App
+**Future Goals:**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Pathfinder
 
-## Available Scripts
+## Description
 
-In the project directory, you can run:
+Pathfinder is a web application aimed at assisting students who are uncertain about their career paths. It provides a solution for students, particularly those in college, to find a clear path towards their desired careers. The application features two primary tools: the Career Finder and the Roadmap Generator.
 
-### `npm start`
+- **Career Finder:** Takes input on students' interests and activities they consider fun, then matches them with potential jobs that align with their skills and preferences.
+- **Roadmap Generator:** Offers a custom academic and career development plan, detailing step-by-step guidance to help students achieve their professional goals.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Goal
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The primary goal of Pathfinder is to help students visualize a clear and achievable path towards their career aspirations, making the journey from education to employment smoother and more structured.
 
-### `npm test`
+## Tools Used
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **React.js:** Utilized for creating interactive user interfaces.
+- **Flask:** Serves as the backend framework to manage API requests and serve data.
+- **OpenAI:** Integrates AI to dynamically generate content based on user inputs.
+- **Tailwind CSS:** Ensures the application is aesthetically pleasing and functionally responsive.
 
-### `npm run build`
+## Requirements
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To run Pathfinder, you will need:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Node.js
+- Python 3.8 or later
+- Flask
+- An OpenAI API key
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Installation Dependencies
 
-### `npm run eject`
+Follow these steps to get your development environment set up:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. **Clone the repository:**
+   ```bash
+   git clone https://your-repository-link
+   cd pathfinder
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. **Install JavaScript dependencies:**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+   ```
+   npm install
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   ```
+3. **Install Python dependencies:**>
 
-## Learn More
+   ```
+   pip install -r requirements.txt
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## How to Run
 
-### Code Splitting
+To start the application:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* **Run the backend server:**
 
-### Analyzing the Bundle Size
+  ```
+  npm install
+  ```
+* **Start the frontend application:**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+  ```
+  npm start
 
-### Making a Progressive Web App
+  ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+  Navigate to `http://localhost:3000` in your browser to view the app.
 
-### Advanced Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+![1723320830367](image/README/1723320830367.png)
 
-### Deployment
+![1723320874092](image/README/1723320874092.png)![1723320959154](image/README/1723320959154.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+**Future Goals**
 
-### `npm run build` fails to minify
+* **Integration of Machine Learning Models:** To provide more accurate predictions and personalized recommendations.
+* **Expansion of Database:** To include a broader range of academic fields and career paths.
+* **User Authentication:** To create personalized user accounts that track individual progress and preferences.
+* **Mobile Responsiveness:** To ensure the platform is accessible on various devices, enhancing user accessibility.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**License:**
+Specify the type of license under which your project is released, for example, MIT, GPL, etc.
