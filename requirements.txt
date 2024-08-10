@@ -1,0 +1,8 @@
+Flask
+python-dotenv
+Openai
+gunicorn
+flask-cors
+werkzeug
+simplejson
+
