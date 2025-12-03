@@ -129,9 +129,17 @@ def generate_roadmap():
           f"I want to be a {Career} in the future. your repsonse must be a RFC8259 JSON response following this format {formatprompt}. There shoud be no beginning message or ending message only in these format """
         )
 
-        response = askAI(prompt)
+        response_text = askAI(prompt)
 
-        return jsonify(response)
+        try:
+            response_json = json.loads(response_text)
+        except json.JSONDecodeError:
+            return jsonify({
+                "error": "Unable to format roadmap response.",
+                "rawResponse": response_text
+            }), 500
+
+        return jsonify(response_json)
     
     else:
         return jsonify({"error": "Method not allowed"})
@@ -155,21 +163,43 @@ def FindyourCareer():
         Activities = data.get('Activities','N/A')
         Subjects = data.get('Subjects','N/A')
         Classes = data.get('Classes','N/A')
-        Extracurriculars = data.get(' Extracurriculars','N/A')
+        Extracurriculars = data.get('Extracurriculars','N/A')
         Clubs = data.get('Clubs','N/A')
-        Certifications = data.get('Certifcation','N/A')
+        Certifications = data.get('Certifications','N/A')
         Gpa = data.get('Gpa','N/A')
-        
-        prompt = (f" I am a student in this {Classes}, I like a lot of subjects but these are my most favourite subjects {Subjects}"
-                f"I participate in a lot of clubs but the ones i spend most of my time is are in these clubs {Clubs}"
-                f"When I am not in clubs or in school doing my classes I take my time doing some hobbies of mine like {Extracurriculars} and some {Activities}"
-                f"I do have a some stuff {Certifications} and a gpa of {Gpa}"
-                f"I do not know the career that I would go into and I would like you to help me out by giving me a list of careers that I can join or that fites my interests "
-                f"I also want you to give a description of how my interest would work with the career")
-    
-        response = askAI(prompt)
 
-        return jsonify(response)
+        formatprompt = '''{
+            "careers": [
+                {
+                    "title": "Creative App Designer",
+                    "description": "Explain why this career fits the student in kid-friendly language.",
+                    "firstSteps": [
+                        "Step 1 the student can try this activity.",
+                        "Step 2 they can explore this class or volunteer work."
+                    ]
+                }
+            ]
+        }'''
+        
+        prompt = (f"I am working with a student currently taking {Classes}. "
+                f"Their favorite subjects are {Subjects}, and the clubs that bring them joy include {Clubs}. "
+                f"In their free time they love doing activities such as {Extracurriculars} and {Activities}. "
+                f"They have achievements like {Certifications} and keep a GPA around {Gpa}. "
+                f"Suggest a short list of kid-friendly careers that match their interests. "
+                f"Please explain the match in simple language and give a couple of easy first steps they can try this month. "
+                f"Your response must be a RFC8259 JSON document shaped exactly like this {formatprompt}. No prose before or after the JSON.")
+    
+        response_text = askAI(prompt)
+
+        try:
+            response_json = json.loads(response_text)
+        except json.JSONDecodeError:
+            return jsonify({
+                "error": "Unable to format career response.",
+                "rawResponse": response_text
+            }), 500
+
+        return jsonify(response_json)
     
     else:
         return jsonify({"error": "Method not allowed "})

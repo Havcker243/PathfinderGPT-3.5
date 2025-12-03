@@ -1,86 +1,52 @@
-**Future Goals:**
-
-# Pathfinder
+﻿# Pathfinder
 
 ## Description
+Pathfinder is a playful web guide for students (ages 8–30) who are exploring interests, classes, and future careers. The refreshed interface keeps copy simple, navigation obvious, and flows focused on two core helpers:
 
-Pathfinder is a web application aimed at assisting students who are uncertain about their career paths. It provides a solution for students, particularly those in college, to find a clear path towards their desired careers. The application features two primary tools: the Career Finder and the Roadmap Generator.
+- **Career Finder**: Collects hobbies, classes, clubs, and GPA to suggest careers written in friendly language plus two starter steps.
+- **Roadmap Generator**: Builds a four-year action plan with courses, clubs, certifications, and advice based on student inputs.
 
-- **Career Finder:** Takes input on students' interests and activities they consider fun, then matches them with potential jobs that align with their skills and preferences.
-- **Roadmap Generator:** Offers a custom academic and career development plan, detailing step-by-step guidance to help students achieve their professional goals.
-
-## Goal
-
-The primary goal of Pathfinder is to help students visualize a clear and achievable path towards their career aspirations, making the journey from education to employment smoother and more structured.
-
-## Tools Used
-
-- **React.js:** Utilized for creating interactive user interfaces.
-- **Flask:** Serves as the backend framework to manage API requests and serve data.
-- **OpenAI:** Integrates AI to dynamically generate content based on user inputs.
-- **Tailwind CSS:** Ensures the application is aesthetically pleasing and functionally responsive.
+## Tech Stack
+- React 18 + React Router for the frontend experience
+- Tailwind/DaisyUI-inspired custom CSS for bright, accessible styling
+- Flask + Flask-CORS for the API layer
+- OpenAI GPT-3.5 for dynamic content generation
 
 ## Requirements
+- Node.js 18+
+- Python 3.8+
+- An OpenAI API key stored in a `.env` file as `OPENAI_API_KEY`
 
-To run Pathfinder, you will need:
+## Getting Started
+### 1. Backend (Flask)
+```bash
+cd Backend
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+# create Backend/.env and add OPENAI_API_KEY=sk-...
+python app.py
+```
+Flask now serves the API on `http://localhost:5000`.
 
-- Node.js
-- Python 3.8 or later
-- Flask
-- An OpenAI API key
+### 2. Frontend (React)
+```bash
+cd Frontend
+npm install
+npm start
+```
+The React app will open at `http://localhost:3000` and talk to the local Flask server.
 
-## Installation Dependencies
+## Experience Tour
+1. **Homepage** – Highlights the refreshed kid-friendly look with CTA buttons to the two tools plus a "Next Ideas" callout.
+2. **Career Finder** – Uses one-page forms, large text areas, and instant AI feedback cards. The backend now enforces JSON responses for predictable rendering.
+3. **Roadmap Form** – Breaks the long form into labeled sections with helper text and optimistic updates when the AI returns a plan.
+4. **Roadmap View** – Replaces the old timeline with colorful cards grouped by year so each action is readable at a glance. A sample plan loads automatically if no AI response is present.
 
-Follow these steps to get your development environment set up:
+## Next Ideas
+- Weekly "tiny challenge" reminders to keep students motivated between sessions.
+- Saved career boards so learners can compare interests with mentors.
+- Sticker-style progress tracking that rewards finishing roadmap steps.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://your-repository-link
-   cd pathfinder
-   ```
-
-2. **Install JavaScript dependencies:**
-
-   ```
-   npm install
-
-   ```
-3. **Install Python dependencies:**>
-
-   ```
-   pip install -r requirements.txt
-
-   ```
-
-## How to Run
-
-To start the application:
-
-* **Run the backend server:**
-
-  ```
-  npm install
-  ```
-* **Start the frontend application:**
-
-  ```
-  npm start
-
-  ```
-
-  Navigate to `http://localhost:3000` in your browser to view the app.
-
-
-![1723320830367](image/README/1723320830367.png)
-
-![1723320874092](image/README/1723320874092.png)![1723320959154](image/README/1723320959154.png)
-
-**Future Goals**
-
-* **Integration of Machine Learning Models:** To provide more accurate predictions and personalized recommendations.
-* **Expansion of Database:** To include a broader range of academic fields and career paths.
-* **User Authentication:** To create personalized user accounts that track individual progress and preferences.
-* **Mobile Responsiveness:** To ensure the platform is accessible on various devices, enhancing user accessibility.
-
-**License:**
-Specify the type of license under which your project is released, for example, MIT, GPL, etc.
+## License
+Specify the license for your project (e.g., MIT, GPL) here.

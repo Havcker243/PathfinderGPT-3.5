@@ -1,14 +1,15 @@
-// Here we import the react components
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Form() {
   const navigate = useNavigate();
-  const [aiResponse, setAiResponse] = useState("");
+  const [aiResponse, setAiResponse] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     Career: "",
     Major: "",
-    SchoolYear: " ",
+    SchoolYear: "",
     Classes: "",
     Internships: "",
     Extracurriculars: "",
@@ -18,12 +19,12 @@ function Form() {
   });
 
   const SchoolYear = [
-    "Middle school ",
-    "Higshcool ",
-    "First Year ",
-    "Second Year ",
-    "Third Year ",
-    "Fourth Year ",
+    "Middle School",
+    "High School",
+    "First Year of College",
+    "Second Year of College",
+    "Third Year of College",
+    "Fourth Year of College",
     "Graduate Student",
   ];
   const gpaRanges = [
@@ -48,7 +49,9 @@ function Form() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formData);
+    setIsLoading(true);
+    setErrorMessage("");
+
     try {
       const response = await fetch("http://localhost:5000/roadmap", {
         method: "POST",
@@ -58,286 +61,183 @@ function Form() {
         body: JSON.stringify(formData),
       });
 
-      const responseData = await response.json();
-      
-      console.log("form.js type of responseData: ",typeof(JSON.parse(responseData)));
-      console.log("form.js data ", JSON.parse(responseData))
-      setAiResponse(responseData);
+      if (!response.ok) {
+        throw new Error("Unable to fetch roadmap");
+      }
 
-      navigate("/roadmap", { state: { aiResponse: JSON.parse(responseData)} });
+      const responseData = await response.json();
+      setAiResponse(responseData);
+      navigate("/roadmap", { state: { aiResponse: responseData } });
     } catch (error) {
       console.error("Error submitting form:", error);
+      setErrorMessage(
+        "We could not build your roadmap yet. Please confirm the backend is running and try again."
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          width: "100vw",
-          paddingTop: "40px",
-          paddingBottom: "40px",
-          backgroundColor: "#f4b6c0",
-        }}
-      >
-        <button
-          className="btn"
-          style={{
-            backgroundColor: "white",
-            border: "0px",
-            borderRadius: "25px",
-            position: "absolute",
-            top: "3%",
-            left: "2%",
-          }}
-          onClick={() => navigate("/")}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="#f4b6c0"
-            className="w-5 h-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-        <form
-          onSubmit={handleSubmit}
-          // onSubmit={() => navigate("/roadmap")}
-          style={{
-            background: "#f9f9f9",
-            border: "0px solid #f4b6c0",
-            padding: "20px",
-            borderRadius: "25px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            maxWidth: "600px",
-            width: "100%",
-          }}
-        >
-          <h2 style={{ textAlign: "center" }}>Student Information</h2>
-          <label style={{ display: "block", margin: "10px 0" }}>
+    <div className="page-shell">
+      <button className="back-button" onClick={() => navigate("/")}>
+        <- Home
+      </button>
+      <div className="content-grid">
+        <section className="card">
+          <span className="tag">Roadmap Generator</span>
+          <h2>Paint a picture of your goals.</h2>
+          <p className="helper-text">
+            Pathfinder turns your answers into a four-year plan filled with
+            courses, clubs, and real-world adventures that fit your dreams.
+          </p>
+          <ul className="checklist">
+            <li>Share where you are in school right now.</li>
+            <li>List classes, clubs, and certifications you have tried.</li>
+            <li>Tell us the career you imagine so we can guide you there.</li>
+          </ul>
+        </section>
+
+        <form className="card form-card" onSubmit={handleSubmit}>
+          <h3>Your Story</h3>
+
+          <div className="form-field">
+            <label htmlFor="major">Major or focus</label>
             <input
+              id="major"
               type="text"
               name="Major"
-              placeholder="Major"
+              placeholder="Biology, design, undecided..."
               value={formData.Major}
               onChange={handleChange}
-              style={{
-                background: "white",
-                color: "black",
-                width: "100%",
-                padding: "10px",
-                borderRadius: "10px",
-                border: "3px dotted #f4c142",
-              }}
             />
-          </label>
-          <label style={{ display: "block", margin: "10px 0" }}>
-            <input
-              type="text"
-              name="Career"
-              placeholder="Career Interest"
-              value={formData.Career}
-              onChange={handleChange}
-              style={{
-                background: "white",
-                color: "black",
-                width: "100%",
-                padding: "10px",
-                borderRadius: "10px",
-                border: "3px dotted #5bc5b8",
-              }}
-            />
-          </label>
-
-          <div style={{ display: "flex", gap: "10px", margin: "10px 0" }}>
-            <label style={{ display: "block", margin: "5px 0", flex: "1" }}>
-              <select
-                name="SchoolYear"
-                value={formData.SchoolYear}
-                onChange={handleChange}
-                style={{
-                  background: "white",
-                  color: "black",
-                  width: "100%",
-                  padding: "10px",
-                  borderRadius: "10px",
-                  border: "3px dotted #ec695b",
-                }}
-              >
-                <option value="">Year</option>
-                {SchoolYear.map((year, index) => (
-                  <option key={index} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label style={{ display: "block", margin: "5px 0", flex: "1" }}>
-              <select
-                name="Gpa"
-                value={formData.Gpa}
-                onChange={handleChange}
-                style={{
-                  background: "white",
-                  color: "black",
-                  width: "100%",
-                  padding: "10px",
-                  borderRadius: "10px",
-                  border: "3px dotted #ec695b",
-                }}
-              >
-                <option value=""> GPA </option>
-                {gpaRanges.map((range, index) => (
-                  <option key={index} value={range}>
-                    {range}
-                  </option>
-                ))}
-              </select>
-            </label>
           </div>
 
-          <label style={{ display: "block", margin: "5px 0" }}>
-            <textarea
-              name="Classes"
+          <div className="form-field">
+            <label htmlFor="career">Career dream</label>
+            <input
+              id="career"
               type="text"
-              value={formData.Classes}
-              placeholder="Please input courses that you have taken"
+              name="Career"
+              placeholder="Marine biologist, UX designer..."
+              value={formData.Career}
               onChange={handleChange}
-              rows="2"
-              style={{
-                background: "white",
-                color: "black",
-                width: "100%",
-                padding: "10px",
-                borderRadius: "10px",
-                border: "3px dotted #5bc5b8",
-              }}
             />
-          </label>
+          </div>
 
-          <label style={{ display: "block", margin: "5px 0" }}>
+          <div className="form-field">
+            <label htmlFor="schoolYear">Current year</label>
+            <select
+              id="schoolYear"
+              name="SchoolYear"
+              value={formData.SchoolYear}
+              onChange={handleChange}
+            >
+              <option value="">Pick one</option>
+              {SchoolYear.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="gpaRange">GPA (optional)</label>
+            <select
+              id="gpaRange"
+              name="Gpa"
+              value={formData.Gpa}
+              onChange={handleChange}
+            >
+              <option value="">Pick a range</option>
+              {gpaRanges.map((range) => (
+                <option key={range} value={range}>
+                  {range}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="classes">Classes taken</label>
             <textarea
+              id="classes"
+              name="Classes"
+              placeholder="Chemistry, animation, entrepreneurship..."
+              value={formData.Classes}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="internships">Internships or jobs</label>
+            <textarea
+              id="internships"
               name="Internships"
-              type="text"
-              placeholder="Please input any internships"
+              placeholder="Museum volunteer, summer research, daycare helper..."
               value={formData.Internships}
               onChange={handleChange}
-              rows="2"
-              style={{
-                background: "white",
-                color: "black",
-                width: "100%",
-                padding: "10px",
-                borderRadius: "10px",
-                border: "3px dotted #f4b6c0",
-              }}
             />
-          </label>
-          <label style={{ display: "block", margin: "5px 0" }}>
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="extracurriculars">Extracurriculars</label>
             <textarea
+              id="extracurriculars"
               name="Extracurriculars"
-              type="text"
-              placeholder="Please input your Extracurriculars or N/A"
+              placeholder="Robotics team, dance, esports..."
               value={formData.Extracurriculars}
               onChange={handleChange}
-              rows="2"
-              style={{
-                background: "white",
-                color: "black",
-                width: "100%",
-                padding: "10px",
-                borderRadius: "10px",
-                border: "3px dotted #f4c142",
-              }}
             />
-          </label>
-          <label style={{ display: "block", margin: "5px 0" }}>
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="clubs">Clubs or groups</label>
             <textarea
+              id="clubs"
               name="Clubs"
-              type="text"
-              placeholder="Please input your Clubs or N/A"
+              placeholder="STEM club, local theater, environmental council..."
               value={formData.Clubs}
               onChange={handleChange}
-              rows="2"
-              style={{
-                background: "white",
-                color: "black",
-                width: "100%",
-                padding: "10px",
-                borderRadius: "10px",
-                border: "3px dotted #ec695b",
-              }}
             />
-          </label>
-          <label style={{ display: "block", margin: "5px 0" }}>
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="certifications">Certificates and badges</label>
             <textarea
+              id="certifications"
               name="Certifications"
-              type="text"
-              placeholder="Please input your Certifications or N/A"
+              placeholder="Google data cert, CPR training..."
               value={formData.Certifications}
               onChange={handleChange}
-              rows="2"
-              style={{
-                background: "white",
-                color: "black",
-                width: "100%",
-                padding: "10px",
-                borderRadius: "10px",
-                border: "3px dotted #5bc5b8",
-              }}
             />
-          </label>
+          </div>
 
-          <button
-            type="submit"
-            style={{
-              background: "#f4b6c0",
-              color: "white",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "10px",
-              cursor: "pointer",
-              marginTop: "5px",
-            }}
-          >
-            Generate Roadmap
+          <button className="primary-button" type="submit" disabled={isLoading}>
+            {isLoading ? "Painting roadmap..." : "Generate Roadmap"}
           </button>
-
-          {aiResponse && (
-            <div
-              className="ai-response"
-              style={{
-                marginTop: "20px",
-                padding: "20px",
-                backgroundColor: "#f8f9fa",
-                border: "1px solid #dee2e6",
-                borderRadius: "10px",
-                boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-                color: "#212529",
-                fontFamily: "'Courier New'",
-                lineHeight: "1.5",
-                overflowX: "auto",
-              }}
-            >
-              <h3>AI Response:</h3>
-              <p>{aiResponse}</p>
-            </div>
-          )}
         </form>
       </div>
-    </>
+
+      {errorMessage && <div className="info-banner error">{errorMessage}</div>}
+
+      {aiResponse && (
+        <div className="card next-ideas-card">
+          <h3>Your roadmap is ready!</h3>
+          <p className="helper-text">
+            We saved the latest version. Jump to the roadmap page to explore by
+            year.
+          </p>
+          <button
+            className="secondary-button"
+            onClick={() => navigate("/roadmap", { state: { aiResponse } })}
+          >
+            View Roadmap
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 export default Form;

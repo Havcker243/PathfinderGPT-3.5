@@ -1,8 +1,23 @@
-// Here we import the react components
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-function Form() {
+
+const gpaRanges = [
+  "4.0 - 5.0",
+  "3.5 - 4.0",
+  "3.0 - 3.5",
+  "2.5 - 3.0",
+  "2.0 - 2.5",
+  "1.5 - 2.0",
+  "1.0 - 1.5",
+  "0.5 - 1.0",
+  "0.0 - 0.5",
+];
+
+function Careerfinder() {
   const navigate = useNavigate();
+  const [aiResponse, setAiResponse] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     Activities: "",
     Subjects: "",
@@ -23,200 +38,175 @@ function Form() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formData);
+    setIsLoading(true);
+    setErrorMessage("");
+
     try {
-      const response = await fetch("http://localhost:5000/FindMe", {
+      const response = await fetch("http://localhost:5000/FindYourCareer", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
+
+      if (!response.ok) {
+        throw new Error("The counselor bot needs another try.");
+      }
+
       const responseData = await response.json();
-      console.log("Submitted successfully:", responseData);
+      setAiResponse(responseData);
     } catch (error) {
       console.error("Error submitting form:", error);
+      setErrorMessage(
+        "We could not reach the Pathfinder counselor. Please check your server and try again."
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        width: "100vw",
-        backgroundColor: "#5bc5b8",
-      }}
-    >
-              <button
-          className="btn"
-          style={{
-            backgroundColor: "white",
-            border: "0px",
-            borderRadius: "25px",
-            position: "absolute",
-            top: "3%",
-            left: "2%",
-          }}
-          onClick={() => navigate("/")}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="#5bc5b8"
-            className="w-5 h-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M15 19l-7-7 7-7"
+    <div className="page-shell">
+      <button className="back-button" onClick={() => navigate("/")}>
+        <- Home
+      </button>
+      <div className="content-grid">
+        <section className="card">
+          <span className="tag">Career Finder</span>
+          <h2>Tell us about the things that make you curious.</h2>
+          <p className="helper-text">
+            Use playful language. The more you share about your favorite
+            activities and classes, the better Pathfinder can match you with
+            kid-friendly careers.
+          </p>
+          <ul className="checklist">
+            <li>Clubs and community groups</li>
+            <li>Weekend projects or hobbies</li>
+            <li>Dream jobs you talk about with friends</li>
+          </ul>
+        </section>
+
+        <form className="card form-card" onSubmit={handleSubmit}>
+          <h3>Student Snapshot</h3>
+
+          <div className="form-field">
+            <label htmlFor="activities">Activities you enjoy</label>
+            <textarea
+              id="activities"
+              name="Activities"
+              placeholder="Drawing, robotics club, cooking with grandma..."
+              value={formData.Activities}
+              onChange={handleChange}
             />
-          </svg>
-        </button>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          background: "#f9f9f9",
-          border: "0px solid #f4b6c0",
-          padding: "20px",
-          borderRadius: "25px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          maxWidth: "600px",
-          width: "100%",
-        }}
-      >
-        <h2 style={{ textAlign: "center" }}>Student Information</h2>
-        <label style={{ display: "block", margin: "10px 0" }}>
-          <textArea
-            type="text"
-            name="Activites"
-            placeholder="Please input all the activites you like doing"
-            value={formData.Activities}
-            onChange={handleChange}
-            rows="2"
-            style={{
-              background: "white",
-              color: "#f4c142",
-              width: "100%",
-              padding: "10px",
-              borderRadius: "10px",
-              border: "3px dotted #f4c142",
-            }}
-          />
-        </label>
+          </div>
 
-        <label style={{ display: "block", margin: "5px 0" }}>
-          <textarea
-            name="Subjects"
-            type="text"
-            value={formData.Subjects}
-            placeholder="Please input all the subjects that you have interest in "
-            onChange={handleChange}
-            rows="2"
-            style={{
-              background: "white",
-              color: "black",
-              width: "100%",
-              padding: "10px",
-              borderRadius: "10px",
-              border: "3px dotted #5bc5b8",
-            }}
-          />
-        </label>
+          <div className="form-field">
+            <label htmlFor="subjects">Favorite subjects</label>
+            <textarea
+              id="subjects"
+              name="Subjects"
+              placeholder="Science, story writing, world history..."
+              value={formData.Subjects}
+              onChange={handleChange}
+            />
+          </div>
 
-        <label style={{ display: "block", margin: "5px 0" }}>
-          <textarea
-            name="Classes"
-            type="text"
-            placeholder="Please input all your best or mot interesting classes "
-            value={formData.Classes}
-            onChange={handleChange}
-            rows="2"
-            style={{
-              background: "white",
-              color: "black",
-              width: "100%",
-              padding: "10px",
-              borderRadius: "10px",
-              border: "3px dotted #f4b6c0",
-            }}
-          />
-        </label>
-        <label style={{ display: "block", margin: "5px 0" }}>
-          <textarea
-            name="Extracurriculars"
-            type="text"
-            placeholder="Please your extracurriculars"
-            value={formData.Extracurriculars}
-            onChange={handleChange}
-            rows="2"
-            style={{
-              background: "white",
-              color: "black",
-              width: "100%",
-              padding: "10px",
-              borderRadius: "10px",
-              border: "3px dotted #f4c142",
-            }}
-          />
-        </label>
-        <label style={{ display: "block", margin: "5px 0" }}>
-          <textarea
-            name="Clubs"
-            type="text"
-            placeholder="Please input your Clubs or N/A"
-            value={formData.Clubs}
-            onChange={handleChange}
-            rows="2"
-            style={{
-              background: "white",
-              color: "black",
-              width: "100%",
-              padding: "10px",
-              borderRadius: "10px",
-              border: "3px dotted #ec695b",
-            }}
-          />
-        </label>
-        <label style={{ display: "block", margin: "5px 0" }}>
-          <textarea
-            name="Certifications"
-            type="text"
-            placeholder="Please input your Certifications or N/A"
-            value={formData.Certifications}
-            onChange={handleChange}
-            rows="2"
-            style={{
-              background: "white",
-              color: "black",
-              width: "100%",
-              padding: "10px",
-              borderRadius: "10px",
-              border: "3px dotted #5bc5b8",
-            }}
-          />
-        </label>
+          <div className="form-field">
+            <label htmlFor="classes">Classes you are proud of</label>
+            <textarea
+              id="classes"
+              name="Classes"
+              placeholder="AP Biology, advanced art, intro to coding..."
+              value={formData.Classes}
+              onChange={handleChange}
+            />
+          </div>
 
-        <button
-          type="submit"
-          style={{
-            background: "#5bc5b8",
-            color: "white",
-            padding: "10px 20px",
-            border: "none",
-            borderRadius: "10px",
-            cursor: "pointer",
-            marginTop: "5px",
-          }}
-        >
-          Find your career!
-        </button>
-      </form>
+          <div className="form-field">
+            <label htmlFor="extracurriculars">Extracurriculars</label>
+            <textarea
+              id="extracurriculars"
+              name="Extracurriculars"
+              placeholder="Volunteering, band, chess club..."
+              value={formData.Extracurriculars}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="clubs">Clubs or teams</label>
+            <textarea
+              id="clubs"
+              name="Clubs"
+              placeholder="Girls Who Code, yearbook, basketball..."
+              value={formData.Clubs}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="certifications">Certificates or awards</label>
+            <textarea
+              id="certifications"
+              name="Certifications"
+              placeholder="Babysitting course, digital badges, honor roll..."
+              value={formData.Certifications}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="gpa">GPA (optional)</label>
+            <select
+              id="gpa"
+              name="Gpa"
+              value={formData.Gpa}
+              onChange={handleChange}
+            >
+              <option value="">Pick a range</option>
+              {gpaRanges.map((range) => (
+                <option key={range} value={range}>
+                  {range}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <button className="primary-button" type="submit" disabled={isLoading}>
+            {isLoading ? "Finding ideas..." : "Show me careers"}
+          </button>
+        </form>
+      </div>
+
+      {errorMessage && <div className="info-banner error">{errorMessage}</div>}
+
+      {aiResponse?.careers?.length > 0 && (
+        <section className="card next-ideas-card">
+          <h3>Careers picked just for you</h3>
+          <p className="helper-text">
+            Tap a card, talk with a mentor, or take one of the suggested first
+            steps this week.
+          </p>
+          <div className="results-grid">
+            {aiResponse.careers.map((career, index) => (
+              <article key={index} className="result-card">
+                <h4>{career.title}</h4>
+                <p>{career.description}</p>
+                {career.firstSteps && (
+                  <ol className="steps-list">
+                    {career.firstSteps.map((step, stepIndex) => (
+                      <li key={stepIndex}>{step}</li>
+                    ))}
+                  </ol>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
-export default Form;
+
+export default Careerfinder;
